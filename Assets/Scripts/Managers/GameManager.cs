@@ -10,13 +10,14 @@ public enum USER_STATE
   DRAWING
 };
 
-public class GameManager : Singleton<GameManager> {
+public class GameManager : Singleton<GameManager>
+{
 
   // guarantee this will be always a singleton only - can't use the constructor!
   protected GameManager()
   {
     grid = new List<List<GameObject>>();
-  } 
+  }
 
   public USER_STATE userState;
   public List<List<GameObject>> grid;
@@ -31,6 +32,7 @@ public class GameManager : Singleton<GameManager> {
 
   private GridManager gridMan;
   private LineManager lineMan;
+  private PuzzleData currentPuzzle;
 
   public LineManager GetLineMan() { return lineMan; }
 
@@ -39,24 +41,25 @@ public class GameManager : Singleton<GameManager> {
     mouseCursor = (GameObject)Instantiate(Resources.Load("Prefabs/DrawingIcon"));
     DontDestroyOnLoad(mouseCursor);
     currentLevel = 0;
-    
+
     uiMan = GameObject.Find("UI").GetComponent<UIManager>();
     lineMan = GameObject.Find("LineManager").GetComponent<LineManager>();
     gridMan = GameObject.Find("GridManager").GetComponent<GridManager>();
 
     ChangeUserState(USER_STATE.IDLE);
 
+    // Init proc. gen. variables
+    ProcGenManager.InitSequentialGen();
+    currentPuzzle = new PuzzleData();
+
     // Initialize ui
     uiMan.UpdateLevelUI();
-
-    // Debug init level
-    //LoadScene(14);
   }
 
   void Update()
   {
     if (Input.GetKey(KeyCode.Q) || Input.GetKeyDown(KeyCode.W))
-      {
+    {
       LoadNextScene();
     }
     if (Input.GetKeyDown(KeyCode.R))
@@ -84,7 +87,7 @@ public class GameManager : Singleton<GameManager> {
 
   void StateUpdate()
   {
-    switch(userState)
+    switch (userState)
     {
       case USER_STATE.IDLE:
         break;
@@ -124,10 +127,10 @@ public class GameManager : Singleton<GameManager> {
     }
   }
 
-public void CheckLevelComplete()
+  public void CheckLevelComplete()
   {
     // Return if any of the end blocks are incomplete
-    foreach(GameObject obj in endBlocks)
+    foreach (GameObject obj in endBlocks)
     {
       EndBlockScript eb = obj.GetComponent<EndBlockScript>();
       if (eb.endStatus != 1) return;
@@ -135,6 +138,8 @@ public void CheckLevelComplete()
 
     levelCompleted = true;
     uiMan.UpdateLevelUI();
+
+    // Remove current start block
   }
 
   public void LoadScene(int level)
@@ -145,8 +150,10 @@ public void CheckLevelComplete()
     lineMan.currentLineBeingDrawn = null;
 
     //gridMan.ConstructLevel(LevelData.puzzleData[currentLevel]);
-    PuzzleData puzzle = ProcGenManager.RandomGenLevel();
-    gridMan.ConstructLevel(puzzle);
+    //PuzzleData puzzle = ProcGenManager.RandomGenLevel();
+    currentPuzzle = ProcGenManager.RandomGenQueuedLevel(currentPuzzle);
+
+    gridMan.ConstructLevel(currentPuzzle);
     uiMan.UpdateLevelUI();
 
     // Reset number of objects intersection

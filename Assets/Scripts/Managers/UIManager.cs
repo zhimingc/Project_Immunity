@@ -114,6 +114,9 @@ public class UIManager : MonoBehaviour {
       GameObject.Find("Quick_Instructs").GetComponent<Text>().enabled = true;
       GameObject.Find("Toggle_Blocks").GetComponent<Text>().enabled = false;
     }
+
+    // Update proc gen queues
+    UpdateBlockQueueUI();
   }
 
   public void UpdateLevelUI()
@@ -173,5 +176,25 @@ public class UIManager : MonoBehaviour {
     {
       uiBlockClicked = BLOCK.MULTI;
     }
+  }
+
+  void UpdateBlockQueueUI()
+  {
+    Text startQText = GameObject.Find("StartQueue").GetComponent<Text>();
+    Text endQText = GameObject.Find("EndQueue").GetComponent<Text>();
+
+    string tmpStartText = "Start Blocks: \n";
+    for (int i = 0; i < ProcGenManager.startQueue.Count; ++i)
+    {
+      tmpStartText += ProcGenManager.startQueue[i].ToString() + "\n";
+    }
+    startQText.text = tmpStartText;
+
+    string tmpEndText = "End Blocks: \n";
+    for (int i = 0; i < ProcGenManager.endQueue.Count; ++i)
+    {
+      tmpEndText += ProcGenManager.endQueue[i].ToString() + "\n";
+    }
+    endQText.text = tmpEndText;
   }
 }

@@ -38,10 +38,8 @@ public class GridManager : MonoBehaviour {
     gridSizeY = puzzleToLoad.gridSize[1];
 
     // Gen special block list
-    NodeBlock[] startBlocks = puzzleToLoad.startBlocks;
-    NodeBlock[] endBlocks = puzzleToLoad.endBlocks;
-    specialBlocks = new List<NodeBlock>(startBlocks);
-    specialBlocks.AddRange(endBlocks);
+    specialBlocks = puzzleToLoad.startBlocks;
+    specialBlocks.AddRange(puzzleToLoad.endBlocks);
 
     ConstructGrid(gridSizeX, gridSizeY);
     // Generate the start and end blocks
