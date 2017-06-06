@@ -62,6 +62,16 @@ public static class ProcGenManager {
     return retPuzzle;
   }
 
+  /*
+
+    UPDATE NEW START BLOCKS WITH NEW POSITIONS AND VALUES FIRST
+    THEN APPEND TO EXISTING START BLOCKS.
+    DONE
+
+    ENSURE SPAWNING OF NEW START BLOCKS DON'T OVERLAP
+    FIX BUG WHERE START BLOCKS ARE SPAWNING ON TOP OF END BLOCKS
+
+  */
   public static PuzzleData RandomGenQueuedLevel(PuzzleData curPuzzle)
   {
     // Randomize grid size
@@ -73,21 +83,21 @@ public static class ProcGenManager {
     int numStart = Random.Range(1, 3);
     int numEnd = Random.Range(1, 2);
     // Add start blocks into current start blocks
-    curPuzzle.startBlocks.AddRange(new NodeBlock[numStart]);
+    List<NodeBlock> tmpStartBlocks = new List<NodeBlock>(new NodeBlock[numStart]);
     // End blocks always reset
     curPuzzle.endBlocks = new List<NodeBlock>(new NodeBlock[numEnd]);
 
     Vector2 startXRange = new Vector2(0, (gridSize[0] / 2) + gridSize[0] % 2);
-    int num = curPuzzle.startBlocks.Count;
+    int num = tmpStartBlocks.Count;
     for (int i = 0; i < num; ++i)
     {
-      curPuzzle.startBlocks[i] = new NodeBlock();
+      tmpStartBlocks[i] = new NodeBlock();
     }
-    RandomGenPositions(startXRange, curPuzzle, ref curPuzzle.startBlocks);
+    RandomGenPositions(startXRange, curPuzzle, ref tmpStartBlocks);
     // Initialize values here depending on how many blocks there are
     for (int i = 0; i < num; ++i)
     {
-      curPuzzle.startBlocks[i].value = startQueue[0];
+      tmpStartBlocks[i].value = startQueue[0];
       startQueue.RemoveAt(0);
     }
 
@@ -103,6 +113,9 @@ public static class ProcGenManager {
       curPuzzle.endBlocks[i].value = endQueue[0];
       endQueue.RemoveAt(0);
     }
+
+    // Update existing start blocks
+    curPuzzle.startBlocks.AddRange(tmpStartBlocks);
 
     // Top up proc. gen. variables
     TopUpSeqQueue();
