@@ -95,8 +95,10 @@
     <Compile Include="Assets\Scripts\Managers\LevelManager.cs" />
     <Compile Include="Assets\Scripts\Managers\LineManager.cs" />
     <Compile Include="Assets\Scripts\Managers\ProcGenManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\ScoreManager.cs" />
     <Compile Include="Assets\Scripts\Managers\UIManager.cs" />
     <Compile Include="Assets\Scripts\MouseController.cs" />
+    <Compile Include="Assets\Scripts\StartBlockScript.cs" />
     <Compile Include="Assets\Scripts\Util\MonoBehaviourExtended.cs" />
     <Compile Include="Assets\Scripts\Util\Singleton.cs" />
   </ItemGroup>

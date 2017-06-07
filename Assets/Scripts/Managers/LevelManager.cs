@@ -56,9 +56,8 @@ public class LevelManager : MonoBehaviour {
     //GenerateBlocks(endBlocks, endBlockObj, endBlockObjs);
 
     //int currentLevel = GameManager.Instance.currentLevel;
-    //startBlocks = LevelData.puzzleData[currentLevel].startBlocks;
+
     startBlocks = puzzle.startBlocks.ToArray();
-    //endBlocks = LevelData.puzzleData[currentLevel].endBlocks;
     endBlocks = puzzle.endBlocks.ToArray();
     GenerateBlocks(startBlocks, startBlockObj, startBlockObjs);
     GenerateBlocks(endBlocks, endBlockObj, endBlockObjs);

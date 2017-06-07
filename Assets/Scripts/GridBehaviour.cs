@@ -318,4 +318,31 @@ public class GridBehaviour : MonoBehaviour {
     }
     return false;
   }
+
+  // Trace to the originating start block to set their used flag
+  public void TraceToStartBlock()
+  {
+    foreach (GameObject couplerObj in couplers)
+    {
+      LineCoupler coupler = couplerObj.GetComponent<LineCoupler>();
+      if (!coupler.inUse || !coupler.isInput) continue;
+
+      // Take current line's starting couplers
+      GridBehaviour originBlock = coupler.currentLine.lineCouplers[0].currentBlock.GetComponent<GridBehaviour>();
+      
+      // if it is a start block, set flag
+      if (originBlock.overrideBlock == BLOCK.START)
+      {
+        originBlock.GetComponent<StartBlockScript>().SetInUse(true);
+      }
+      else
+      {
+        // if not then call trace to start block on that block
+        originBlock.TraceToStartBlock();
+      }
+    }
+
+
+  }
+
 }

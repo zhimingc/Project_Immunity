@@ -198,6 +198,7 @@ GameObject:
   - component: {fileID: 61863329001889358}
   - component: {fileID: 114142193647170288}
   - component: {fileID: 114000907467631656}
+  - component: {fileID: 114536768285861822}
   m_Layer: 0
   m_Name: Start_Block
   m_TagString: Untagged
@@ -556,6 +557,18 @@ MonoBehaviour:
   inUse: 0
   canSpawnLines: 0
   gridB: {fileID: 0}
+--- !u!114 &114536768285861822
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1951663246409574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf7ac0c0e5c19474a88179b5b9fb99f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isInUse: 0
 --- !u!114 &114676478288649388
 MonoBehaviour:
   m_ObjectHideFlags: 1

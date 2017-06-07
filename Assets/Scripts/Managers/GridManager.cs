@@ -27,8 +27,8 @@ public class GridManager : MonoBehaviour {
     }
     ResetLegalBlocks();
 
-    int curLevel = GameManager.Instance.currentLevel;
-    ConstructLevel(LevelData.puzzleData[curLevel]);
+    //int curLevel = GameManager.Instance.currentLevel;
+    //ConstructLevel(LevelData.puzzleData[curLevel]);
   }
 
   public void ConstructLevel(PuzzleData puzzleToLoad)
@@ -38,7 +38,7 @@ public class GridManager : MonoBehaviour {
     gridSizeY = puzzleToLoad.gridSize[1];
 
     // Gen special block list
-    specialBlocks = puzzleToLoad.startBlocks;
+    specialBlocks = new List<NodeBlock>(puzzleToLoad.startBlocks);
     specialBlocks.AddRange(puzzleToLoad.endBlocks);
 
     ConstructGrid(gridSizeX, gridSizeY);
@@ -50,11 +50,6 @@ public class GridManager : MonoBehaviour {
     else if (gridSizeX >= 5 || gridSizeY >= 4) Camera.main.orthographicSize = 7;
     else Camera.main.orthographicSize = 5;
   }
-
-  // Update is called once per frame
-  void Update () {
-		
-	}
 
   public void ResetAllBlocks()
   {

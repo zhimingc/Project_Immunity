@@ -54,4 +54,9 @@ public class EndBlockScript : MonoBehaviour {
         break;
     }
   }
+
+  public void BeginTraceToStartBlock()
+  {
+    GetComponent<GridBehaviour>().TraceToStartBlock();
+  }
 }

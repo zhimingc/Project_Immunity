@@ -30,6 +30,7 @@ public class GameManager : Singleton<GameManager>
   // For ui controls
   public UIManager uiMan;
 
+  private ScoreManager scoreMan;
   private GridManager gridMan;
   private LineManager lineMan;
   private PuzzleData currentPuzzle;
@@ -38,19 +39,26 @@ public class GameManager : Singleton<GameManager>
 
   void Start()
   {
+    endBlocks = new List<GameObject>();
     mouseCursor = (GameObject)Instantiate(Resources.Load("Prefabs/DrawingIcon"));
     DontDestroyOnLoad(mouseCursor);
-    currentLevel = 0;
+    currentLevel = 14;
 
     uiMan = GameObject.Find("UI").GetComponent<UIManager>();
     lineMan = GameObject.Find("LineManager").GetComponent<LineManager>();
     gridMan = GameObject.Find("GridManager").GetComponent<GridManager>();
+    scoreMan = gameObject.AddComponent<ScoreManager>();
 
-    ChangeUserState(USER_STATE.IDLE);
+    //ChangeUserState(USER_STATE.IDLE);
+    // Init. state for mouse feedback
+    lineMan.RemoveMousePointFromLine();
+    mouseCursor.GetComponent<SpriteRenderer>().enabled = false;
 
     // Init proc. gen. variables
     ProcGenManager.InitSequentialGen();
     currentPuzzle = new PuzzleData();
+    currentPuzzle = ProcGenManager.RandomGenQueuedLevel(currentPuzzle);
+    gridMan.ConstructLevel(currentPuzzle);
 
     // Initialize ui
     uiMan.UpdateLevelUI();
@@ -139,7 +147,15 @@ public class GameManager : Singleton<GameManager>
     levelCompleted = true;
     uiMan.UpdateLevelUI();
 
-    // Remove current start block
+    // Trigger start blocks which have been used
+    foreach (GameObject obj in endBlocks)
+    {
+      EndBlockScript eb = obj.GetComponent<EndBlockScript>();
+      eb.BeginTraceToStartBlock();
+
+      // Update score
+      scoreMan.AddScore(1);
+    }
   }
 
   public void LoadScene(int level)
@@ -149,8 +165,25 @@ public class GameManager : Singleton<GameManager>
     lineMan.ResetLines();
     lineMan.currentLineBeingDrawn = null;
 
+    // Hand crafted levels
     //gridMan.ConstructLevel(LevelData.puzzleData[currentLevel]);
+
+    // Full random level gen
     //PuzzleData puzzle = ProcGenManager.RandomGenLevel();
+
+    // Proc. queued level gen
+    // Remove used start blocks here
+    for (int i = 0; i < currentPuzzle.startBlocks.Count; ++i)
+    {
+      NodeBlock startB = currentPuzzle.startBlocks[i];
+      StartBlockScript sbs = grid[(int)startB.pos.x][(int)startB.pos.y].GetComponent<StartBlockScript>();
+
+      if (sbs.isInUse)
+      {
+        currentPuzzle.startBlocks.Remove(startB);
+        --i;
+      }
+    }
     currentPuzzle = ProcGenManager.RandomGenQueuedLevel(currentPuzzle);
 
     gridMan.ConstructLevel(currentPuzzle);
