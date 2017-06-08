@@ -10,6 +10,8 @@ public enum BLOCK
   COPY,
   MINUS,
   MULTI,
+  ADD,
+  SPLIT,
   NUM_USER_BLOCKS,
   END,
   START
@@ -202,6 +204,69 @@ public class MultiBlock : Block
   new static public Block Create() { return new MultiBlock(); }
 };
 
+public class AddBlock : Block
+{
+  public AddBlock()
+  {
+    // Coral
+    lineCol = new Color(1.0f, 0.5f, 80.0f / 255.0f, 0.5f);
+    blockSprite = Resources.Load<Sprite>("Sprites/block_add");
+    blockType = BLOCK.ADD;
+    maxIn = 3;
+    maxOut = 1;
+  }
+
+  override public void UpdateGridValue(GridBehaviour obj)
+  {
+    int finalVal = 0;
+    foreach (GameObject go in obj.couplers)
+    {
+      LineCoupler lc = go.GetComponent<LineCoupler>();
+      if (!lc.inUse || !lc.isInput) continue;
+
+      finalVal += lc.currentLine.value;
+    }
+    obj.data = new GridData(finalVal);
+  }
+
+  new static public Block Create() { return new AddBlock(); }
+};
+
+public class SplitBlock : Block
+{
+  public SplitBlock()
+  {
+    // Coral
+    lineCol = new Color(1.0f, 0.5f, 80.0f / 255.0f, 0.5f);
+    blockSprite = Resources.Load<Sprite>("Sprites/block_split");
+    blockType = BLOCK.SPLIT;
+    maxIn = 1;
+    maxOut = 3;
+  }
+
+  override public void UpdateGridValue(GridBehaviour obj)
+  {
+    int divideAmt = 0;
+    int curAmt = 0;
+    foreach (GameObject go in obj.couplers)
+    {
+      LineCoupler lc = go.GetComponent<LineCoupler>();
+      if (!lc.inUse) continue;
+
+      if (!lc.isInput)
+        ++divideAmt;
+      else if (lc.isInput)
+        curAmt = lc.currentLine.value;
+    }
+
+    // Check to avoid division by 0
+    if (divideAmt > 0) obj.data = new GridData(curAmt / divideAmt);
+    else obj.data = new GridData(curAmt);
+  }
+
+  new static public Block Create() { return new SplitBlock(); }
+};
+
 public class Block {
 
   // Behavior
@@ -241,6 +306,8 @@ public class Block {
     { BLOCK.BASE, (BlockCreate) Delegate.CreateDelegate(typeof(BlockCreate), typeof(BaseBlock).GetMethod("Create"))},
     { BLOCK.MINUS, (BlockCreate) Delegate.CreateDelegate(typeof(BlockCreate), typeof(MinusBlock).GetMethod("Create"))},
     { BLOCK.MULTI, (BlockCreate) Delegate.CreateDelegate(typeof(BlockCreate), typeof(MultiBlock).GetMethod("Create"))},
+    { BLOCK.ADD, (BlockCreate) Delegate.CreateDelegate(typeof(BlockCreate), typeof(AddBlock).GetMethod("Create"))},
+    { BLOCK.SPLIT, (BlockCreate) Delegate.CreateDelegate(typeof(BlockCreate), typeof(SplitBlock).GetMethod("Create"))},
 
   };
 

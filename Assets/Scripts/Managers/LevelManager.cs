@@ -81,6 +81,8 @@ public class LevelManager : MonoBehaviour {
     {
       Vector3 instPos = new Vector3((-halfGridX + blocks[i].pos.x) * (gridBlockSize.x + spacing) + posOffsetX,
         (-halfGridY + blocks[i].pos.y) * (gridBlockSize.y + spacing) + posOffsetY, 0.0f);
+      instPos += transform.position;  // Add position of obj to offset entire grid
+
       GameObject curGridBlock = Instantiate(obj, instPos, Quaternion.identity);
       curGridBlock.transform.localScale = new Vector3(gridBlockSize.x, gridBlockSize.y, 1.0f);
 

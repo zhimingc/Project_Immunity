@@ -56,6 +56,7 @@ public class GameManager : Singleton<GameManager>
 
     // Init proc. gen. variables
     ProcGenManager.InitSequentialGen();
+    ProcGenManager.CaptureInitPGW();
     currentPuzzle = new PuzzleData();
     currentPuzzle = ProcGenManager.RandomGenQueuedLevel(currentPuzzle);
     gridMan.ConstructLevel(currentPuzzle);
@@ -66,14 +67,28 @@ public class GameManager : Singleton<GameManager>
 
   void Update()
   {
+    // Testing
+    if (Input.GetKey(KeyCode.Z))
+    {
+      ProcGenManager.IncreaseGridSize(1, 1);
+      LoadNextScene();
+    }
     if (Input.GetKey(KeyCode.Q) || Input.GetKeyDown(KeyCode.W))
     {
       LoadNextScene();
     }
+    // Reset level
     if (Input.GetKeyDown(KeyCode.R))
     {
-      LoadScene(currentLevel);
+      //LoadScene(currentLevel);
+      ResetProcGenScene();
     }
+    // Restart game
+    if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.R))
+    {
+      RestartProcGenScene();
+    }
+
     if (Input.GetKeyDown(KeyCode.Escape))
     {
       Application.Quit();
@@ -156,6 +171,28 @@ public class GameManager : Singleton<GameManager>
       // Update score
       scoreMan.AddScore(1);
     }
+  }
+
+  public void RestartProcGenScene()
+  {
+    ProcGenManager.LoadInitPGW();
+    currentPuzzle = new PuzzleData();
+    currentPuzzle = ProcGenManager.RandomGenQueuedLevel(currentPuzzle);
+    scoreMan.ResetScoreMan();
+
+    ResetProcGenScene();
+  }
+
+  public void ResetProcGenScene()
+  {
+    lineMan.ResetLines();
+    lineMan.currentLineBeingDrawn = null;
+    gridMan.ConstructLevel(currentPuzzle);
+    uiMan.UpdateLevelUI();
+
+    // Reset number of objects intersection
+    objsIntersect = 0;
+    levelCompleted = false;
   }
 
   public void LoadScene(int level)

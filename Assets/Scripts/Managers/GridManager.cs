@@ -24,6 +24,7 @@ public class GridManager : MonoBehaviour {
     for(int i = 0; i < legalBlockFeedback.Length; ++i)
     {
       legalBlockFeedback[i] = Instantiate(legalBlock);
+      legalBlockFeedback[i].transform.localScale = new Vector3(gridBlockSize.x, gridBlockSize.y, 1) * 1.25f;
     }
     ResetLegalBlocks();
 
@@ -46,9 +47,9 @@ public class GridManager : MonoBehaviour {
     GetComponent<LevelManager>().GenerateLevel(puzzleToLoad);
 
     // Setting camera size according to size of grid (wip)
-    if (gridSizeX >= 7 || gridSizeY >= 6) Camera.main.orthographicSize = 9;
-    else if (gridSizeX >= 5 || gridSizeY >= 4) Camera.main.orthographicSize = 7;
-    else Camera.main.orthographicSize = 5;
+    //if (gridSizeX >= 7 || gridSizeY >= 6) Camera.main.orthographicSize = 10;
+    //else if (gridSizeX >= 5 || gridSizeY >= 4) Camera.main.orthographicSize = 7;
+    //else Camera.main.orthographicSize = 5;
   }
 
   public void ResetAllBlocks()
@@ -110,6 +111,8 @@ public class GridManager : MonoBehaviour {
 
         Vector3 instPos = new Vector3(x * (gridBlockSize.x + spacing) + posOffsetX, 
           y * (gridBlockSize.y + spacing) + posOffsetY, 0.0f);
+        instPos += transform.position;  // Add position of obj to offset entire grid
+
         GameObject curGridBlock = Instantiate(gridObj, instPos, Quaternion.identity);
         curGridBlock.transform.localScale = new Vector3(gridBlockSize.x, gridBlockSize.y, 1.0f);
 

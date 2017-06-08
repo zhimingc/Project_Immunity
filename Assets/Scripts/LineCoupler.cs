@@ -56,7 +56,7 @@ public class LineCoupler : MonoBehaviour {
     ParticleSystem.EmissionModule em = couplerParticles.emission;
     ParticleSystem.ColorOverLifetimeModule colorLifetime = couplerParticles.colorOverLifetime;
 
-    //if (gridB) colorLifetime.color = gridB.currentBlockType.lineCol;
+    if (gridB) colorLifetime.color = gridB.currentBlockType.lineCol;
 
     switch (GameManager.Instance.userState)
     {

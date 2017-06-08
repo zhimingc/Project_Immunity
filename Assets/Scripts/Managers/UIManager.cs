@@ -18,6 +18,8 @@ public class UIManager : MonoBehaviour {
   private Text progressText;
   private Text levelCompleteText;
   private Text bestScoreText;
+  // Register control block map
+  private Dictionary<string, BLOCK> controlBlockMap;
 
   void Awake()
   {
@@ -28,6 +30,17 @@ public class UIManager : MonoBehaviour {
 
     // init which levels to show ui
     toShow = new int[3];
+
+    // Initialize control block map
+    controlBlockMap = new Dictionary<string, BLOCK>
+    {
+      { "Copy", BLOCK.COPY},
+      { "Base", BLOCK.BASE},
+      { "Minus", BLOCK.MINUS},
+      { "Multi", BLOCK.MULTI},
+      { "Add", BLOCK.ADD },
+      { "Split", BLOCK.SPLIT },
+    };
   }
 
   // Use this for initialization
@@ -64,13 +77,13 @@ public class UIManager : MonoBehaviour {
   void UpdateControlBlockUIDisplay()
   {
     int curLevel = GameManager.Instance.currentLevel;
-    GameObject.Find("Toggle_Blocks").GetComponent<Text>().enabled = true;
+    //GameObject.Find("Toggle_Blocks").GetComponent<Text>().enabled = true;
     GameObject.Find("Quick_Instructs").GetComponent<Text>().enabled = false;
     //GameObject.Find("Drag_Instructs").GetComponent<Text>().enabled = true;
 
     for (int i = 0; i < controlBlocks.Length; ++i)
     {
-      controlBlocks[i].gameObject.SetActive(true);
+      //controlBlocks[i].gameObject.SetActive(true);
     }
     //if (curLevel >= 6)
     //{
@@ -155,27 +168,12 @@ public class UIManager : MonoBehaviour {
 
   public void OnControlBlockClick(GameObject btn)
   {
-    string btnName = btn.name;
+    //string btnName = btn.name;
     isDragging = true;
     uiDragging.GetComponent<SpriteRenderer>().enabled = true;
     uiDragging.GetComponent<SpriteRenderer>().sprite = btn.GetComponent<Image>().sprite;
 
-    if (btnName == "Base")
-    {
-      uiBlockClicked = BLOCK.BASE;
-    }
-    else if (btnName == "Copy")
-    {
-      uiBlockClicked = BLOCK.COPY;
-    }
-    else if (btnName == "Minus")
-    {
-      uiBlockClicked = BLOCK.MINUS;
-    }
-    else if (btnName == "Multi")
-    {
-      uiBlockClicked = BLOCK.MULTI;
-    }
+    uiBlockClicked = controlBlockMap[btn.name];
   }
 
   void UpdateBlockQueueUI()
@@ -183,14 +181,14 @@ public class UIManager : MonoBehaviour {
     Text startQText = GameObject.Find("StartQueue").GetComponent<Text>();
     Text endQText = GameObject.Find("EndQueue").GetComponent<Text>();
 
-    string tmpStartText = "Start Blocks: \n";
+    string tmpStartText = "Next\nBlack: \n";
     for (int i = 0; i < ProcGenManager.startQueue.Count; ++i)
     {
       tmpStartText += ProcGenManager.startQueue[i].ToString() + "\n";
     }
     startQText.text = tmpStartText;
 
-    string tmpEndText = "End Blocks: \n";
+    string tmpEndText = "Next\nWhite: \n";
     for (int i = 0; i < ProcGenManager.endQueue.Count; ++i)
     {
       tmpEndText += ProcGenManager.endQueue[i].ToString() + "\n";

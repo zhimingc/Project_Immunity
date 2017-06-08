@@ -51,7 +51,7 @@ public class GridBehaviour : MonoBehaviour {
     }
 
     // Init block
-    if (currentBlockType.blockType < BLOCK.NUM_USER_BLOCKS)
+    if (overrideBlock < BLOCK.NUM_USER_BLOCKS)
       ScrollBlocks(currentBlockType.blockType);
   }
 
@@ -212,8 +212,10 @@ public class GridBehaviour : MonoBehaviour {
 
   public void SetValue(int val, bool overRide = false)
   {
-    if ((currentBlockType.blockType == BLOCK.START || currentBlockType.blockType == BLOCK.END) &&
-      overRide)
+    //if ((currentBlockType.blockType == BLOCK.START || currentBlockType.blockType == BLOCK.END) &&
+    //  overRide)
+    if ((overrideBlock == BLOCK.START || overrideBlock == BLOCK.END) &&
+        overRide)
       data = new GridData(val);
 
     DisplayValue(val);
