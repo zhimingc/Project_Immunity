@@ -104,29 +104,29 @@ public class UIManager : MonoBehaviour {
     //  controlBlocks[0].gameObject.SetActive(true);
     //}
     //else
-    if (curLevel >= 9)
-    {
-      GameObject.Find("Drag_Instructs").GetComponent<Text>().enabled = false;
-    }
-    else if (curLevel < 2)
-    {
-      GameObject.Find("Drag_Instructs").GetComponent<Text>().enabled = false;
+    //if (curLevel >= 9)
+    //{
+    //  GameObject.Find("Drag_Instructs").GetComponent<Text>().enabled = false;
+    //}
+    //else if (curLevel < 2)
+    //{
+    //  GameObject.Find("Drag_Instructs").GetComponent<Text>().enabled = false;
 
-      if (curLevel == 1)
-      {
-        GameObject.Find("Quick_Instructs").GetComponent<Text>().text = "Get the right value to the white blocks";
-      }
-      else if (curLevel == 0)
-      {
-        GameObject.Find("Quick_Instructs").GetComponent<Text>().text = "Left click to draw lines";
-      }
+    //  if (curLevel == 1)
+    //  {
+    //    GameObject.Find("Quick_Instructs").GetComponent<Text>().text = "Get the right value to the white blocks";
+    //  }
+    //  else if (curLevel == 0)
+    //  {
+    //    GameObject.Find("Quick_Instructs").GetComponent<Text>().text = "Left click to draw lines";
+    //  }
 
-      for (int i = 0; i < controlBlocks.Length; ++i)
-        controlBlocks[i].gameObject.SetActive(false);
+    //  for (int i = 0; i < controlBlocks.Length; ++i)
+    //    controlBlocks[i].gameObject.SetActive(false);
 
-      GameObject.Find("Quick_Instructs").GetComponent<Text>().enabled = true;
-      GameObject.Find("Toggle_Blocks").GetComponent<Text>().enabled = false;
-    }
+    //  GameObject.Find("Quick_Instructs").GetComponent<Text>().enabled = true;
+    //  GameObject.Find("Toggle_Blocks").GetComponent<Text>().enabled = false;
+    //}
 
     // Update proc gen queues
     UpdateBlockQueueUI();

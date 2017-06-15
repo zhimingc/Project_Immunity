@@ -12,7 +12,6 @@ public enum USER_STATE
 
 public class GameManager : Singleton<GameManager>
 {
-
   // guarantee this will be always a singleton only - can't use the constructor!
   protected GameManager()
   {
@@ -42,7 +41,7 @@ public class GameManager : Singleton<GameManager>
     endBlocks = new List<GameObject>();
     mouseCursor = (GameObject)Instantiate(Resources.Load("Prefabs/DrawingIcon"));
     DontDestroyOnLoad(mouseCursor);
-    currentLevel = 14;
+    currentLevel = 0;
 
     uiMan = GameObject.Find("UI").GetComponent<UIManager>();
     lineMan = GameObject.Find("LineManager").GetComponent<LineManager>();
@@ -54,12 +53,21 @@ public class GameManager : Singleton<GameManager>
     lineMan.RemoveMousePointFromLine();
     mouseCursor.GetComponent<SpriteRenderer>().enabled = false;
 
-    // Init proc. gen. variables
-    ProcGenManager.InitSequentialGen();
-    ProcGenManager.CaptureInitPGW();
-    currentPuzzle = new PuzzleData();
-    currentPuzzle = ProcGenManager.RandomGenQueuedLevel(currentPuzzle);
-    gridMan.ConstructLevel(currentPuzzle);
+    // Differing behaviour for differing scenes
+    if (SceneManager.GetActiveScene().name == "tutorial_scene")
+    {
+      currentPuzzle = LevelData.puzzleData[currentLevel];
+      gridMan.ConstructLevel(currentPuzzle);
+    }
+    else if(SceneManager.GetActiveScene().name == "puzzle_scene")
+    {
+      // Init proc. gen. variables
+      ProcGenManager.InitSequentialGen();
+      ProcGenManager.CaptureInitPGW();
+      currentPuzzle = new PuzzleData();
+      currentPuzzle = ProcGenManager.RandomGenQueuedLevel(currentPuzzle);
+      gridMan.ConstructLevel(currentPuzzle);
+    }
 
     // Initialize ui
     uiMan.UpdateLevelUI();
@@ -195,7 +203,24 @@ public class GameManager : Singleton<GameManager>
     levelCompleted = false;
   }
 
-  public void LoadScene(int level)
+  void LoadSequentialScene(int level)
+  {
+    currentLevel = level;
+    lineMan.ResetLines();
+    lineMan.currentLineBeingDrawn = null;
+
+    // Hand crafted levels
+    gridMan.ConstructLevel(LevelData.puzzleData[currentLevel]);
+
+    gridMan.ConstructLevel(currentPuzzle);
+    uiMan.UpdateLevelUI();
+
+    // Reset number of objects intersection
+    objsIntersect = 0;
+    levelCompleted = false;
+  }
+
+  public void LoadProcGenScene(int level)
   {
     //currentLevel = level;
     currentLevel = 14;
@@ -234,7 +259,14 @@ public class GameManager : Singleton<GameManager>
   public void LoadNextScene()
   {
     currentLevel = (currentLevel + 1) % LevelData.puzzleData.Count;
-    LoadScene(currentLevel);
+    if (SceneManager.GetActiveScene().name == "tutorial_scene")
+    {
+      LoadSequentialScene(currentLevel);
+    }
+    else if (SceneManager.GetActiveScene().name == "puzzle_scene")
+    {
+      LoadProcGenScene(currentLevel);
+    }
   }
 
   public void SetEndBlocks(List<GameObject> ebs)

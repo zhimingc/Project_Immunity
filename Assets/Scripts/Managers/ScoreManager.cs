@@ -65,14 +65,14 @@ public class ScoreManager : MonoBehaviour {
       {
         ProcGenManager.IncreaseGridSize(1, 1);
         ProcGenManager.IncreaseStartSpawnNum(1, 0);
-        ProcGenManager.IncreaseEndSpawnNum(1, 0);
+        //ProcGenManager.IncreaseEndSpawnNum(1, 0);
       }
       
       // Every 2 intervals (odd intervals)
       if (level % 2 == 1)
       {
         ProcGenManager.IncreaseStartSpawnNum(0, 1);
-        ProcGenManager.IncreaseEndSpawnNum(0, 1);
+        ProcGenManager.IncreaseEndSpawnNum(1, 1);
       }
 
     }

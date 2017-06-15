@@ -43,7 +43,7 @@ public class LineCoupler : MonoBehaviour {
     couplerParticles = GetComponentInChildren<ParticleSystem>();
     //UpdateCouplerColor();
     var psMain = couplerParticles.main;
-    psMain.startSize = 1.2f;
+    psMain.startSize = transform.localScale.x * 2.75f;
   }
 
   // Update is called once per frame
@@ -56,7 +56,8 @@ public class LineCoupler : MonoBehaviour {
     ParticleSystem.EmissionModule em = couplerParticles.emission;
     ParticleSystem.ColorOverLifetimeModule colorLifetime = couplerParticles.colorOverLifetime;
 
-    if (gridB) colorLifetime.color = gridB.currentBlockType.lineCol;
+    if (gridB.currentBlockType != null)
+      colorLifetime.color = gridB.currentBlockType.lineCol;
 
     switch (GameManager.Instance.userState)
     {
@@ -120,14 +121,27 @@ public class LineCoupler : MonoBehaviour {
 
   void OnMouseOver()
   {
+    if (GameManager.Instance.levelCompleted == true) return;
+
     // Toggle player input state between idle and drawing
-    if (Input.GetMouseButtonUp(0))
+    if (Input.GetMouseButtonDown(0))
     {
       switch (GameManager.Instance.userState)
       {
         case USER_STATE.IDLE:
           DefaultBlockMouseDown();
           //lineMan.DrawLegalBlocks(gameObject);
+          break;
+        case USER_STATE.DRAWING:
+          break;
+      }
+    }
+
+    if (Input.GetMouseButtonUp(0))
+    {
+      switch (GameManager.Instance.userState)
+      {
+        case USER_STATE.IDLE:
           break;
         case USER_STATE.DRAWING:
           if (currentLine == null || currentLine.lineCouplers[0] == this)
@@ -144,6 +158,20 @@ public class LineCoupler : MonoBehaviour {
           GameManager.Instance.ChangeUserState(USER_STATE.IDLE);
           gridMan.ResetAllBlocks();
           lineMan.currentLineBeingDrawn = null;
+          break;
+      }
+    }
+    if (Input.GetMouseButtonUp(1))
+    {
+      switch (GameManager.Instance.userState)
+      {
+        case USER_STATE.IDLE:
+          if (currentLine != null)
+          {
+            currentLine.ResetPath();
+          }
+          break;
+        case USER_STATE.DRAWING:
           break;
       }
     }

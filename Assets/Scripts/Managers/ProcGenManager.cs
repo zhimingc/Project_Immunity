@@ -9,12 +9,12 @@ class ProcGenWrapper
   public int[] startValueRange = new int[] { 1, 4 };
   public int[] startSpawnNum = new int[] { 1, 3 };
   // Start from max; spawn when total < pacer
-  public int[] startSpawnPacer = new int[] { 6 };
+  public List<int> startSpawnPacer = new List<int>(new int[] { 6 });
 
   public int[] endValueRange = new int[] { 1, 3 };
   public int[] endSpawnNum = new int[] { 1, 3 };
   // Start from min; spawn when total > pacer
-  public int[] endSpawnPacer = new int[] { 8 };
+  public List<int> endSpawnPacer = new List<int>(new int[] { 8 });
 
   // Use flip flop to alternate between odd and even numbers
   public bool flipFlopStart = false;
@@ -33,12 +33,12 @@ public static class ProcGenManager {
     startValueRange = new int[] { 1, 4 },
     startSpawnNum = new int[] { 1, 3 },
     // Start from max; spawn when total < pacer
-    startSpawnPacer = new int[] { 6 },
+    startSpawnPacer = new List<int>(new int[] { 6 }),
 
     endValueRange = new int[] { 1, 3 },
     endSpawnNum = new int[] { 1, 3 },
     // Start from min; spawn when total > pacer
-    endSpawnPacer = new int[] { 8 },
+    endSpawnPacer = new List<int>(new int[] { 8 }),
 
     // Use flip flop to alternate between odd and even numbers
     flipFlopStart = false,
@@ -61,12 +61,18 @@ public static class ProcGenManager {
   {
     pgw.startSpawnNum[0] += amtMin;
     pgw.startSpawnNum[1] += amtMax;
+
+    // Update pacer
+    if (amtMax != 0) pgw.startSpawnPacer.Add((int)(pgw.startValueRange[1] * 2.5f));
   }
 
   public static void IncreaseEndSpawnNum(int amtMin, int amtMax)
   {
     pgw.endSpawnNum[0] += amtMin;
     pgw.endSpawnNum[1] += amtMax;
+
+    // Update pacer
+    if (amtMax != 0) pgw.endSpawnPacer.Add(pgw.startValueRange[1] * 3);
   }
 
   public static void IncreaseGridSize(int amtX, int amtY)
@@ -192,7 +198,7 @@ public static class ProcGenManager {
     int startSpawnMax = 0;
     for (int i = pgw.startSpawnNum[1] - 1, c = 0; i >= pgw.startSpawnNum[0]; --i, ++c)
     {
-      if (pgw.startSpawnPacer.Length <= c)
+      if (pgw.startSpawnPacer.Count <= c)
       {
         startSpawnMax = pgw.startSpawnNum[0];
         break;
@@ -225,7 +231,7 @@ public static class ProcGenManager {
     int endSpawnMax = 0;
     for (int i = pgw.endSpawnNum[0], c = 0; i < pgw.endSpawnNum[1]; ++i, ++c)
     {
-      if (pgw.endSpawnPacer.Length <= c)
+      if (pgw.endSpawnPacer.Count <= c)
       {
         endSpawnMax = pgw.endSpawnNum[1] - 1;
         break;

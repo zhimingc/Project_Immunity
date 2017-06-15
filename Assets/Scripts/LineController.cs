@@ -18,10 +18,6 @@ public class LineController : MonoBehaviour {
     gridMan = GameObject.Find("GridManager").GetComponent<GridManager>();
   }
 
-	// Update is called once per frame
-	void Update () {
-	}
-
   void OnMouseEnter()
   {
     GameManager.Instance.UpdateObjsIntersect(1);
@@ -58,13 +54,25 @@ public class LineController : MonoBehaviour {
 
   void OnMouseOver()
   {
+    if (GameManager.Instance.levelCompleted == true) return;
+
     // Toggle player input state between idle and drawing
-    if (Input.GetMouseButtonUp(0))
+    if (Input.GetMouseButtonDown(0))
     {
       switch (GameManager.Instance.userState)
       {
         case USER_STATE.IDLE:
           DefaultBlockMouseDown();
+          break;
+        case USER_STATE.DRAWING:
+          break;
+      }
+    }
+    if (Input.GetMouseButtonUp(0))
+    {
+      switch (GameManager.Instance.userState)
+      {
+        case USER_STATE.IDLE:
           break;
         case USER_STATE.DRAWING:
           if (GetComponent<GridBehaviour>().currentBlockType.blockType == BLOCK.EMPTY)
