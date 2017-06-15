@@ -1,0 +1,9 @@
+{
+"TOTAL_MEMORY": 268435456,
+"dataUrl": "Messenger_v0.2_web.data.unityweb",
+"asmCodeUrl": "Messenger_v0.2_web.asm.code.unityweb",
+"asmMemoryUrl": "Messenger_v0.2_web.asm.memory.unityweb",
+"asmFrameworkUrl": "Messenger_v0.2_web.asm.framework.unityweb",
+"splashScreenStyle": "Dark",
+"backgroundColor": "#222C36"
+}
